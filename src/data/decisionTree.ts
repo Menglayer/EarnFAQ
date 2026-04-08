@@ -143,8 +143,8 @@ export const decisionTree: Record<string, DecisionNode> = {
 
 export const ROOT_NODE_ID = 'q1'
 
-/** Total number of unique questions in the tree */
-export const TOTAL_QUESTIONS = Object.keys(decisionTree).length
+/** Longest decision path = 15 questions (q1→q3→…→q16, skipping q2 branch) */
+export const TOTAL_QUESTIONS = 15
 
 /** Calculate the maximum depth of the tree for progress tracking */
 export function getMaxDepth(): number {
