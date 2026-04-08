@@ -224,9 +224,20 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         />
 
         <div className="text-center mb-8 mt-4">
-          <div className="text-brand-muted mb-2">{t(locale, 'app.resultFor', { name: projectName })}</div>
+          <div className="text-brand-muted mb-4 flex items-center justify-center flex-wrap whitespace-pre-wrap">
+            {t(locale, 'app.resultFor', { name: projectName }).split(projectName).map((part, i, arr) => (
+              <React.Fragment key={i}>
+                <span className="text-sm md:text-base">{part}</span>
+                {i < arr.length - 1 && (
+                  <span className="inline-block mx-1.5 px-3 py-1 bg-brand-primary/15 text-brand-primary font-black text-2xl md:text-3xl rounded-xl border border-brand-primary/30 shadow-[0_0_20px_rgba(59,130,246,0.25)] transform hover:scale-105 transition-transform cursor-default">
+                    {projectName}
+                  </span>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
           <h2
-            className={`text-4xl md:text-5xl font-extrabold mb-4 ${
+            className={`text-4xl md:text-5xl font-extrabold mb-4 mt-2 ${
               isSuccess ? 'text-brand-success text-shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'text-brand-danger text-shadow-[0_0_20px_rgba(239,68,68,0.5)]'
             }`}
           >
