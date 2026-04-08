@@ -77,7 +77,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         const canvas = await html2canvas(shareCardRef.current, {
           backgroundColor: '#0a0e1a',
         })
-        canvas.toBlob(async (blob) => {
+        canvas.toBlob(async (blob: Blob | null) => {
           if (!blob) return
           const file = new File([blob], 'share.png', { type: 'image/png' })
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
