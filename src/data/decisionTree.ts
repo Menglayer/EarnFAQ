@@ -34,10 +34,10 @@ export const decisionTree: Record<string, DecisionNode> = {
   },
   q2: {
     id: 'q2',
-    question: '是TVL超过1B的老项目吗？',
-    questionEn: 'Is it an established project with TVL over 1B?',
-    yes: result(true, 'TVL超过1B的老项目，相对安全', 'Established project with TVL over 1B, relatively safe'),
-    no: result(false, 'TGE后TVL不足1B，风险较高', 'Post-TGE with TVL under 1B, higher risk'),
+    question: '是TVL超过2B的老项目吗？',
+    questionEn: 'Is it an established project with TVL over 2B?',
+    yes: result(true, 'TVL超过2B的老项目，相对安全', 'Established project with TVL over 2B, relatively safe'),
+    no: result(false, 'TGE后TVL不足2B，风险较高', 'Post-TGE with TVL under 2B, higher risk'),
   },
   q3: {
     id: 'q3',
