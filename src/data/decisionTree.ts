@@ -39,10 +39,10 @@ export const decisionTree: Record<string, DecisionNode> = {
   },
   q3: {
     id: 'q3',
-    question: '能7天内跑回吗？',
-    questionEn: 'Can you withdraw within 7 days?',
+    question: '能7天内赎回吗？',
+    questionEn: 'Can you redeem within 7 days?',
     yes: 'q4',
-    no: result(false, '无法7天内撤出，流动性风险太高', 'Cannot withdraw within 7 days, liquidity risk too high'),
+    no: result(false, '无法7天内赎回，流动性风险太高', 'Cannot redeem within 7 days, liquidity risk too high'),
   },
   q4: {
     id: 'q4',
@@ -53,10 +53,10 @@ export const decisionTree: Record<string, DecisionNode> = {
   },
   q5: {
     id: 'q5',
-    question: '出现问题，能跑的起吗？',
-    questionEn: 'If something goes wrong, can you afford to run?',
+    question: '出现问题，能赔得起吗？',
+    questionEn: 'If something goes wrong, can you afford the loss?',
     yes: 'q6',
-    no: result(false, '出问题跑不起，风险承受能力不足', 'Cannot afford to run if issues arise, insufficient risk tolerance'),
+    no: result(false, '赔不起就别冲，风险承受能力不足', "Can't afford to lose, insufficient risk tolerance"),
   },
   q6: {
     id: 'q6',
@@ -81,24 +81,24 @@ export const decisionTree: Record<string, DecisionNode> = {
   },
   q9: {
     id: 'q9',
-    question: '你能理解利息从哪来嘛？',
+    question: '你能理解利息从哪来吗？',
     questionEn: 'Do you understand where the yield comes from?',
     yes: 'q10',
     no: result(false, '不理解收益来源，可能是庞氏骗局', "Don't understand yield source, might be a Ponzi scheme"),
   },
   q10: {
     id: 'q10',
-    question: '有名人问在吗？',
-    questionEn: 'Are there notable figures vouching for it?',
+    question: '有KOL/机构同车吗？',
+    questionEn: 'Are there KOLs or institutions also invested?',
     yes: 'q11',
-    no: result(false, '缺乏知名人士背书，可信度不足', 'Lacks endorsement from notable figures, insufficient credibility'),
+    no: result(false, '缺乏KOL/机构背书，可信度不足', 'Lacks KOL/institutional endorsement, insufficient credibility'),
   },
   q11: {
     id: 'q11',
     question: '需要用三方跨链桥吗？',
     questionEn: 'Does it require a third-party cross-chain bridge?',
-    yes: 'q12',
-    no: result(false, '不需要跨链桥反而更安全，但此路不通', 'No cross-chain bridge needed, but this path leads nowhere'),
+    yes: result(false, '需要跨链桥，额外增加了桥的安全风险', 'Requires cross-chain bridge, adds additional bridge security risk'),
+    no: 'q12',
   },
   q12: {
     id: 'q12',
