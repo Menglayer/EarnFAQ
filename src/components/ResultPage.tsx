@@ -114,7 +114,7 @@ function generateImage(
   ctx.fillStyle = 'rgba(100, 116, 139, 0.5)'
   ctx.font = 'bold 11px system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText(locale === 'zh-CN' ? '加密理财十三问' : 'Crypto EarnFAQ', 30, footerY + 22)
+  ctx.fillText(locale === 'zh-CN' ? '加密理财⑮问' : 'Crypto EarnFAQ', 30, footerY + 22)
   ctx.textAlign = 'right'
   ctx.font = '11px system-ui, sans-serif'
   ctx.fillText(new Date().toLocaleDateString(), w - 30, footerY + 22)
