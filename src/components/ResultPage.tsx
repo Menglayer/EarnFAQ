@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import confetti from 'canvas-confetti'
-import html2canvas from 'html2canvas'
 import { t } from '../i18n'
 import type { Locale } from '../i18n'
 import type { ResultNode } from '../data/decisionTree'
@@ -15,6 +14,120 @@ interface ResultPageProps {
   onRestart: () => void
 }
 
+function generateImage(
+  projectName: string,
+  result: ResultNode,
+  history: HistoryStep[],
+  locale: Locale,
+): string {
+  const scale = 2
+  const w = 600
+  const h = 340 + history.length * 32
+  const canvas = document.createElement('canvas')
+  canvas.width = w * scale
+  canvas.height = h * scale
+  const ctx = canvas.getContext('2d')!
+  ctx.scale(scale, scale)
+
+  // Background
+  ctx.fillStyle = '#0a0e1a'
+  ctx.fillRect(0, 0, w, h)
+
+  // Top accent bar
+  const isSuccess = result.result === 'can-deposit'
+  ctx.fillStyle = isSuccess ? '#10b981' : '#ef4444'
+  ctx.fillRect(0, 0, w, 4)
+
+  // Project name subtitle
+  ctx.fillStyle = '#64748b'
+  ctx.font = '14px system-ui, sans-serif'
+  ctx.textAlign = 'center'
+  const subtitle = locale === 'zh-CN'
+    ? `关于「${projectName}」的诊断结果`
+    : `Diagnosis for "${projectName}"`
+  ctx.fillText(subtitle, w / 2, 40)
+
+  // Result title
+  ctx.fillStyle = isSuccess ? '#10b981' : '#ef4444'
+  ctx.font = 'bold 36px system-ui, sans-serif'
+  const title = locale === 'zh-CN'
+    ? (isSuccess ? '可以存！' : '不能存！')
+    : (isSuccess ? 'Safe to Deposit!' : 'Do NOT Deposit!')
+  ctx.fillText(title, w / 2, 85)
+
+  // Reason
+  ctx.fillStyle = '#f1f5f9'
+  ctx.font = '16px system-ui, sans-serif'
+  const reason = locale === 'zh-CN' ? result.reason : result.reasonEn
+  ctx.fillText(reason, w / 2, 115)
+
+  // Divider
+  ctx.strokeStyle = 'rgba(100, 116, 139, 0.2)'
+  ctx.lineWidth = 1
+  ctx.beginPath()
+  ctx.moveTo(30, 140)
+  ctx.lineTo(w - 30, 140)
+  ctx.stroke()
+
+  // Path title
+  ctx.fillStyle = '#64748b'
+  ctx.font = 'bold 13px system-ui, sans-serif'
+  ctx.textAlign = 'left'
+  ctx.fillText(locale === 'zh-CN' ? '决策路径' : 'Decision Path', 30, 165)
+
+  // History steps
+  let y = 190
+  history.forEach((step, idx) => {
+    ctx.fillStyle = '#64748b'
+    ctx.font = '13px system-ui, sans-serif'
+    ctx.textAlign = 'right'
+    ctx.fillText(`${idx + 1}.`, 50, y)
+
+    ctx.fillStyle = 'rgba(241, 245, 249, 0.9)'
+    ctx.font = '13px system-ui, sans-serif'
+    ctx.textAlign = 'left'
+    // Truncate long questions
+    const maxQ = 42
+    const qText = step.question.length > maxQ ? step.question.slice(0, maxQ) + '…' : step.question
+    ctx.fillText(qText, 60, y)
+
+    const ansText = locale === 'zh-CN'
+      ? (step.answer === 'yes' ? '是的' : '不是')
+      : (step.answer === 'yes' ? 'Yes' : 'No')
+    ctx.fillStyle = step.answer === 'yes' ? '#3b82f6' : '#64748b'
+    ctx.font = 'bold 13px system-ui, sans-serif'
+    ctx.textAlign = 'right'
+    ctx.fillText(ansText, w - 30, y)
+
+    y += 32
+  })
+
+  // Bottom divider
+  const footerY = y + 10
+  ctx.strokeStyle = 'rgba(100, 116, 139, 0.2)'
+  ctx.beginPath()
+  ctx.moveTo(30, footerY)
+  ctx.lineTo(w - 30, footerY)
+  ctx.stroke()
+
+  // Footer
+  ctx.fillStyle = 'rgba(100, 116, 139, 0.5)'
+  ctx.font = 'bold 11px system-ui, sans-serif'
+  ctx.textAlign = 'left'
+  ctx.fillText(locale === 'zh-CN' ? '加密理财13问' : 'Crypto EarnFAQ', 30, footerY + 22)
+  ctx.textAlign = 'right'
+  ctx.font = '11px system-ui, sans-serif'
+  ctx.fillText(new Date().toLocaleDateString(), w - 30, footerY + 22)
+
+  // Watermark
+  ctx.textAlign = 'center'
+  ctx.fillStyle = 'rgba(100, 116, 139, 0.35)'
+  ctx.font = '11px system-ui, sans-serif'
+  ctx.fillText('earnfaq.menglayer.cc', w / 2, footerY + 22)
+
+  return canvas.toDataURL('image/png')
+}
+
 export const ResultPage: React.FC<ResultPageProps> = ({
   result,
   projectName,
@@ -23,7 +136,6 @@ export const ResultPage: React.FC<ResultPageProps> = ({
   onRestart,
 }) => {
   const isSuccess = result.result === 'can-deposit'
-  const shareCardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (isSuccess) {
@@ -54,29 +166,14 @@ export const ResultPage: React.FC<ResultPageProps> = ({
     }
   }, [isSuccess])
 
-  const handleDownload = async () => {
-    if (!shareCardRef.current) return
-    try {
-      const canvas = await html2canvas(shareCardRef.current, {
-        backgroundColor: '#0a0e1a',
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        // Ensure we capture the full element
-        scrollX: 0,
-        scrollY: -window.scrollY,
-        windowWidth: shareCardRef.current.scrollWidth,
-        windowHeight: shareCardRef.current.scrollHeight,
-      })
-      const link = document.createElement('a')
-      link.download = `earnfaq-${projectName}.png`
-      link.href = canvas.toDataURL('image/png')
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    } catch (e) {
-      console.error('Failed to generate image', e)
-    }
+  const handleDownload = () => {
+    const dataUrl = generateImage(projectName, result, history, locale)
+    const link = document.createElement('a')
+    link.download = `earnfaq-${projectName}.png`
+    link.href = dataUrl
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   const handleShare = () => {
@@ -98,10 +195,8 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         !isSuccess ? 'animate-shake' : ''
       }`}
     >
-      {/* Shareable Card */}
+      {/* Result Card */}
       <div
-        id="share-card"
-        ref={shareCardRef}
         className={`w-full glass-panel rounded-3xl p-8 mb-8 relative overflow-hidden ${
           isSuccess ? 'border-brand-success/50' : 'border-brand-danger/50'
         }`}

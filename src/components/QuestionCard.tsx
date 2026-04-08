@@ -10,6 +10,7 @@ interface QuestionCardProps {
   onAnswer: (choice: 'yes' | 'no') => void
   isEasterEgg?: boolean
   locale: Locale
+  link?: { text: string; url: string }
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -18,6 +19,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onAnswer,
   isEasterEgg,
   locale,
+  link,
 }) => {
   const [displayedText, setDisplayedText] = useState('')
 
@@ -39,6 +41,48 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     return () => clearInterval(timer)
   }, [question])
+
+  const renderQuestionText = () => {
+    if (!link) {
+      return (
+        <>
+          {displayedText}
+          <span className="animate-pulse opacity-50 ml-1">|</span>
+        </>
+      )
+    }
+
+    // Split displayedText around the link text to make it clickable
+    const linkIdx = displayedText.indexOf(link.text)
+    if (linkIdx === -1) {
+      // Link text hasn't been typed yet
+      return (
+        <>
+          {displayedText}
+          <span className="animate-pulse opacity-50 ml-1">|</span>
+        </>
+      )
+    }
+
+    const before = displayedText.slice(0, linkIdx)
+    const after = displayedText.slice(linkIdx + link.text.length)
+    return (
+      <>
+        {before}
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-brand-primary underline decoration-brand-primary/50 hover:decoration-brand-primary transition-colors"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {link.text}
+        </a>
+        {after}
+        <span className="animate-pulse opacity-50 ml-1">|</span>
+      </>
+    )
+  }
 
   return (
     <motion.div
@@ -65,8 +109,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       )}
 
       <h2 className="text-2xl md:text-3xl font-bold text-center text-brand-text mb-12 h-[80px] flex items-center justify-center">
-        {displayedText}
-        <span className="animate-pulse opacity-50 ml-1">|</span>
+        {renderQuestionText()}
       </h2>
 
       <div className="flex w-full gap-4 mt-auto">

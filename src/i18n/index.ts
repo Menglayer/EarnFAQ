@@ -2,7 +2,7 @@ export type Locale = 'zh-CN' | 'en'
 
 export const translations: Record<Locale, Record<string, string>> = {
   'zh-CN': {
-    'app.title': '加密理财十八问',
+    'app.title': '加密理财13问',
     'app.subtitle': '输入加密项目名称，回答几个问题，帮你判断能不能存',
     'app.inputPlaceholder': '输入项目名称，例如：Aave, Lido...',
     'app.startButton': '开始诊断',
@@ -22,7 +22,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'app.resultTitle.cannot': '不能存！',
     'app.resultFor': '关于「{{name}}」的诊断结果',
     'app.pathTitle': '决策路径',
-    'app.madeWith': '加密理财十八问',
+    'app.madeWith': '加密理财13问',
     'app.copied': '已复制到剪贴板',
     'app.shareNotSupported': '您的浏览器不支持分享功能，图片已下载',
     'app.lang': 'EN',

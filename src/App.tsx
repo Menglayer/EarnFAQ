@@ -61,6 +61,7 @@ function App() {
                 onAnswer={answer}
                 isEasterEgg={state.currentNode.special === 'easter-egg'}
                 locale={locale}
+                link={state.currentNode.link}
               />
             </div>
           )}

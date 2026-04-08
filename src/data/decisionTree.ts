@@ -4,6 +4,8 @@ export interface DecisionNode {
   questionEn: string
   /** Special visual treatment for this node */
   special?: 'easter-egg' | 'final'
+  /** Whether this node has a link embedded in the question */
+  link?: { text: string; url: string }
   yes: string | ResultNode
   no: string | ResultNode
 }
@@ -95,27 +97,21 @@ export const decisionTree: Record<string, DecisionNode> = {
   },
   q11: {
     id: 'q11',
-    question: '需要用三方跨链桥吗？',
-    questionEn: 'Does it require a third-party cross-chain bridge?',
-    yes: result(false, '需要跨链桥，额外增加了桥的安全风险', 'Requires cross-chain bridge, adds additional bridge security risk'),
+    question: '朝令夕改，项目方拍脑袋做决策吗？',
+    questionEn: 'Do the rules change constantly? Does the team make impulsive decisions?',
+    yes: result(false, '规则朝令夕改，项目方决策随意，不靠谱', 'Rules change constantly, team makes impulsive decisions, unreliable'),
     no: 'q12',
   },
   q12: {
     id: 'q12',
-    question: '规则朝令夕改，项目方拍脑袋做决策吗？',
-    questionEn: 'Do the rules change constantly? Does the team make impulsive decisions?',
-    yes: result(false, '规则朝令夕改，项目方决策随意，不靠谱', 'Rules change constantly, team makes impulsive decisions, unreliable'),
-    no: 'q13',
+    question: '看起来比 USD.萌 好吗？',
+    questionEn: 'Does it look better than USD.Meng?',
+    link: { text: 'USD.萌', url: 'https://usdm.menglayer.cc' },
+    yes: 'q13',
+    no: result(false, '连USD.萌都不如的项目，垃圾吧到吧', "A project worse than USD.Meng? Trash it"),
   },
   q13: {
     id: 'q13',
-    question: '项目看起来比 usdm.menglayer.cc 好吗？',
-    questionEn: 'Does the project look better than usdm.menglayer.cc?',
-    yes: 'q14',
-    no: result(false, '连USD.萌都不如的项目，垃圾吧到吧', "A project worse than USD.Meng? Trash it"),
-  },
-  q14: {
-    id: 'q14',
     question: '你今天进门是先迈的左脚吗？',
     questionEn: 'Did you step through the door with your left foot first today?',
     special: 'easter-egg',
