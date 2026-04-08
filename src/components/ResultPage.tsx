@@ -60,43 +60,33 @@ export const ResultPage: React.FC<ResultPageProps> = ({
       const canvas = await html2canvas(shareCardRef.current, {
         backgroundColor: '#0a0e1a',
         scale: 2,
+        useCORS: true,
+        logging: false,
+        // Ensure we capture the full element
+        scrollX: 0,
+        scrollY: -window.scrollY,
+        windowWidth: shareCardRef.current.scrollWidth,
+        windowHeight: shareCardRef.current.scrollHeight,
       })
-      const url = canvas.toDataURL('image/png')
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `earnfaq-${projectName}.png`
-      a.click()
+      const link = document.createElement('a')
+      link.download = `earnfaq-${projectName}.png`
+      link.href = canvas.toDataURL('image/png')
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     } catch (e) {
       console.error('Failed to generate image', e)
     }
   }
 
-  const handleShare = async () => {
-    if (navigator.share && shareCardRef.current) {
-      try {
-        const canvas = await html2canvas(shareCardRef.current, {
-          backgroundColor: '#0a0e1a',
-        })
-        canvas.toBlob(async (blob: Blob | null) => {
-          if (!blob) return
-          const file = new File([blob], 'share.png', { type: 'image/png' })
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              title: t(locale, 'app.title'),
-              text: t(locale, 'app.resultFor', { name: projectName }),
-              files: [file],
-            })
-          } else {
-            handleDownload()
-          }
-        })
-      } catch (e) {
-        console.error('Share failed', e)
-        handleDownload()
-      }
-    } else {
-      handleDownload()
-    }
+  const handleShare = () => {
+    const resultText = isSuccess
+      ? t(locale, 'app.resultTitle.can')
+      : t(locale, 'app.resultTitle.cannot')
+    const reason = locale === 'zh-CN' ? result.reason : result.reasonEn
+    const tweetText = `${t(locale, 'app.resultFor', { name: projectName })}\n\n${resultText}\n${reason}\n\n🔗 earnfaq.menglayer.cc`
+    const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
+    window.open(twitterUrl, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -176,8 +166,12 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleShare}
-          className="flex-1 py-4 bg-gradient-primary text-white rounded-xl font-bold shadow-lg shadow-brand-primary/30 hover-glow"
+          className="flex-1 py-4 bg-gradient-primary text-white rounded-xl font-bold shadow-lg shadow-brand-primary/30 hover-glow flex items-center justify-center gap-2"
         >
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="X">
+            <title>X</title>
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
           {t(locale, 'app.share')}
         </motion.button>
         <motion.button

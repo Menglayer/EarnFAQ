@@ -74,7 +74,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => onAnswer('yes')}
-          className="flex-1 py-4 bg-gradient-primary text-white rounded-xl font-bold text-lg hover-glow shadow-lg"
+          className="flex-1 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-shadow"
         >
           {t(locale, 'app.yes')}
         </motion.button>
@@ -82,7 +82,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => onAnswer('no')}
-          className="flex-1 py-4 bg-brand-card border border-brand-muted/50 text-brand-text rounded-xl font-bold text-lg hover:border-brand-primary hover:text-brand-primary hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-colors"
+          className="flex-1 py-4 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-red-500/30 hover:shadow-red-500/50 transition-shadow"
         >
           {t(locale, 'app.no')}
         </motion.button>
