@@ -279,6 +279,13 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           {t(locale, 'app.download')}
         </motion.button>
       </div>
+
+      {isSuccess && (
+        <div className="mt-6 text-center text-brand-muted/60 text-xs leading-relaxed">
+          <p>⚠️ {t(locale, 'app.disclaimer1')}</p>
+          <p>{t(locale, 'app.disclaimer2')}</p>
+        </div>
+      )}
     </motion.div>
   )
 }

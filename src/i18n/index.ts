@@ -26,6 +26,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     'app.copied': '已复制到剪贴板',
     'app.shareNotSupported': '您的浏览器不支持分享功能，图片已下载',
     'app.lang': 'EN',
+    'app.disclaimer1': '仅供娱乐参考，不构成投资建议',
+    'app.disclaimer2': '投资有风险，理财需谨慎',
   },
   en: {
     'app.title': 'Crypto EarnFAQ',
@@ -52,6 +54,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     'app.copied': 'Copied to clipboard',
     'app.shareNotSupported': 'Share not supported, image downloaded instead',
     'app.lang': '中文',
+    'app.disclaimer1': 'For entertainment purposes only, not investment advice',
+    'app.disclaimer2': 'Investing involves risk, manage your finances carefully',
   },
 }
 
