@@ -22,7 +22,8 @@ function generateImage(
 ): string {
   const scale = 2
   const w = 600
-  const h = 340 + history.length * 32
+  const isSuccess = result.result === 'can-deposit'
+  const h = 340 + history.length * 32 + (isSuccess ? 50 : 0)
   const canvas = document.createElement('canvas')
   canvas.width = w * scale
   canvas.height = h * scale
@@ -34,7 +35,6 @@ function generateImage(
   ctx.fillRect(0, 0, w, h)
 
   // Top accent bar
-  const isSuccess = result.result === 'can-deposit'
   ctx.fillStyle = isSuccess ? '#10b981' : '#ef4444'
   ctx.fillRect(0, 0, w, 4)
 
@@ -124,6 +124,22 @@ function generateImage(
   ctx.fillStyle = 'rgba(100, 116, 139, 0.35)'
   ctx.font = '11px system-ui, sans-serif'
   ctx.fillText('earnfaq.menglayer.cc', w / 2, footerY + 22)
+
+  // Risk disclaimer (only for success results)
+  if (isSuccess) {
+    const disclaimerY = footerY + 42
+    ctx.fillStyle = 'rgba(100, 116, 139, 0.45)'
+    ctx.font = '10px system-ui, sans-serif'
+    ctx.textAlign = 'center'
+    const d1 = locale === 'zh-CN'
+      ? '⚠️ 仅供娱乐参考，不构成投资建议'
+      : '⚠️ For entertainment only, not investment advice'
+    const d2 = locale === 'zh-CN'
+      ? '投资有风险，理财需谨慎'
+      : 'Investing involves risk, proceed with caution'
+    ctx.fillText(d1, w / 2, disclaimerY)
+    ctx.fillText(d2, w / 2, disclaimerY + 16)
+  }
 
   return canvas.toDataURL('image/png')
 }
